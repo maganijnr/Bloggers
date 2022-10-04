@@ -1,0 +1,25 @@
+{
+	"name": "bloggers",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"start": "node backend/server",
+		"server": "nodemon backend/server",
+		"client": "yarn dev --prefix frontend",
+		"project": "concurrently \"yarn run server\" \"yarn run client\""
+	},
+	"dependencies": {
+		"colors": "^1.4.0",
+		"create-react-app": "^5.0.1",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.1",
+		"express-async-handler": "^1.2.0",
+		"mongoose": "^6.6.3",
+		"nodemon": "^2.0.20"
+	},
+	"devDependencies": {
+		"concurrently": "^7.4.0"
+	}
+}
