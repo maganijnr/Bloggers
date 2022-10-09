@@ -13,18 +13,18 @@ export const registerUser = async (req, res) => {
 		/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 	if (name === "" || email === "" || password === "") {
-		return res.json({ msg: "Please enter all fields" });
+		return res.status(401).json({ message: "Please enter all fields" });
 	} else if (!String(email).match(re)) {
-		return res.json({ msg: "Please enter a valid email" });
+		return res.status(401).json({ message: "Please enter a valid email" });
 	} else if (password.length < 4) {
-		return res.json({ msg: "Password is too short" });
+		return res.status(401).json({ message: "Password is too short" });
 	}
 
 	try {
 		const userExist = await User.findOne({ email: email });
 
 		if (userExist) {
-			return res.json({ msg: "User already exist" });
+			return res.status(401).json({ message: "User already exist" });
 		}
 
 		const salt = await bcrypt.genSalt(10);
@@ -40,13 +40,13 @@ export const registerUser = async (req, res) => {
 			}
 		);
 
-		res.json({
+		res.status(201).json({
 			name: user.name,
 			email: user.email,
 			token: token,
 		});
 	} catch (err) {
-		return res.json({ msg: err.message });
+		return res.status(401).json({ message: err.message });
 	}
 };
 
@@ -61,24 +61,24 @@ export const loginUser = async (req, res) => {
 		/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 	if (email === "" || password === "") {
-		return res.json({ msg: "Please enter all fields" });
+		return res.status(404).json({ message: "Please enter all fields" });
 	} else if (!String(email).match(re)) {
-		return res.json({ msg: "Please enter a valid email" });
+		return res.status(401).json({ message: "Please enter a valid email" });
 	} else if (password.length < 4) {
-		return res.json({ msg: "Password is too short" });
+		return res.status(401).json({ message: "Password is too short" });
 	}
 
 	try {
 		const userExist = await User.findOne({ email: email });
 
 		if (!userExist) {
-			return res.json({ msg: "User not found" });
+			return res.status(401).json({ message: "User not found" });
 		}
 
 		const passwordMatch = await bcrypt.compare(password, userExist.password);
 
 		if (!passwordMatch) {
-			return res.json({ msg: "Invalid password" });
+			return res.status(401).json({ message: "Invalid password" });
 		}
 
 		const token = jwt.sign(
@@ -89,12 +89,12 @@ export const loginUser = async (req, res) => {
 			}
 		);
 
-		return res.json({
+		return res.status(201).json({
 			name: userExist.name,
 			email: userExist.email,
 			token: token,
 		});
 	} catch (error) {
-		return res.json({ msg: error.message });
+		return res.status(401).json({ message: error.message });
 	}
 };
