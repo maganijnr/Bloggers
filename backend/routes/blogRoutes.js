@@ -1,13 +1,15 @@
 import express from "express";
-import asyncHandler from "express-async-handler";
+import {
+	createBlog,
+	deleteBlog,
+	getAllBlogs,
+	getSingleBlog,
+} from "../controllers/blogController.js";
+import { protectBlogCreate } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get(
-	"/",
-	asyncHandler((req, res) => {
-		res.json("Get all blog routes");
-	})
-);
+router.route("/").post(protectBlogCreate, createBlog).get(getAllBlogs);
+router.route("/:id").get(getSingleBlog).delete(protectBlogCreate, deleteBlog);
 
 export default router;

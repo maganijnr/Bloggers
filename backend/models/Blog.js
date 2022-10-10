@@ -6,7 +6,7 @@ const BlogModel = mongoose.Schema(
 		content: { type: String, required: true },
 		genre: { type: String, required: true },
 		creator: { type: mongoose.ObjectId, ref: "User" },
-		createdAt: new Date(0),
+		imageUrl: { type: String },
 	},
 	{ timestamps: true }
 );
